@@ -1,5 +1,8 @@
 from django.shortcuts import render
+from django.db.models import Q
 from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from .models import User, UserAddress, Courier, Restaurant, RestaurantGroup, RestaurantDish, RestaurantAttribute, Order, OrderDish, OrderAttribute, Ticket
 from .serializers import UserSerializer, UserAddressSerializer, CourierSerializer, RestaurantSerializer, RestaurantGroupSerializer, RestaurantDishSerializer, RestaurantAttributeSerializer, OrderSerializer, OrderDishSerializer, OrderAttributeSerializer, TicketSerializer
 
@@ -31,6 +34,25 @@ class RestaurantGroupViewSet(viewsets.ModelViewSet):
 class RestaurantDishViewSet(viewsets.ModelViewSet):
     queryset = RestaurantDish.objects.all()
     serializer_class = RestaurantDishSerializer
+    
+    @action(methods=["GET"], detail=False)
+    def recommended(self, request):
+        dishes = RestaurantDishSerializer(RestaurantDish.objects.filter(
+            (Q(id_group__id_restaurant__title="Бургер Кинг") | Q(id_group__id_restaurant__title="Rostic's")) & ~Q(price__gte=300)
+        ), many=True)
+        return Response(
+            {"Рекомендованное": dishes.data}
+        )
+    
+    @action(methods=["GET"], detail=False)
+    def premium(self, request):
+        dishes = RestaurantDishSerializer(RestaurantDish.objects.filter(
+            (Q(id_group__id_restaurant__title="Бургер Кинг") | Q(id_group__id_restaurant__title="Вкусно - и точка"))
+            & ~Q(price__lte=300) & Q(id_group__title="Говядина")
+        ), many=True)
+        return Response(
+            {"Премиум-бургеры": dishes.data}
+        )
 
 
 class RestaurantAttributeViewSet(viewsets.ModelViewSet):
