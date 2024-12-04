@@ -58,7 +58,7 @@ class OrderAttribute(models.Model):
     id_attribute = models.ForeignKey(RestaurantAttribute, verbose_name="ID атрибута", on_delete=models.CASCADE)
 
 
-class Tickets(models.Model):
+class Ticket(models.Model):
     id_order = models.ForeignKey(Order, verbose_name="ID заказа", on_delete=models.CASCADE)
     comment = models.TextField(verbose_name="Комментарий")
 
