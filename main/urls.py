@@ -21,6 +21,7 @@ from delivery import views
 from rest_framework import routers
 
 router = routers.SimpleRouter()
+router.register('users', views.UserViewSet)
 router.register('tickets', views.TicketViewSet)
 
 urlpatterns = [
