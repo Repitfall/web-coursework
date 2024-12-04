@@ -31,6 +31,7 @@ class RestaurantGroup(models.Model):
 class RestaurantDish(models.Model):
     id_group = models.ForeignKey(RestaurantGroup, verbose_name="ID группы", on_delete=models.CASCADE)
     title = models.CharField(verbose_name="Название", max_length=128)
+    price = models.IntegerField(verbose_name="Цена")
     info = models.TextField(verbose_name="Описание")
 
 
