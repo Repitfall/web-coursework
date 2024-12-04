@@ -22,6 +22,15 @@ from rest_framework import routers
 
 router = routers.SimpleRouter()
 router.register('users', views.UserViewSet)
+router.register('users/address', views.UserAddressViewSet)
+router.register('couriers', views.CourierViewSet)
+router.register('restaurants', views.RestaurantViewSet)
+router.register('restaurants/groups', views.RestaurantGroupViewSet)
+router.register('restaurants/dishes', views.RestaurantDishViewSet)
+router.register('restaurants/attributes', views.RestaurantAttributeViewSet)
+router.register('orders', views.OrderViewSet)
+router.register('orders/dishes', views.OrderDishViewSet)
+router.register('orders/attributes', views.OrderAttributeViewSet)
 router.register('tickets', views.TicketViewSet)
 
 urlpatterns = [
