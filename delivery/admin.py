@@ -1,7 +1,11 @@
 from django.contrib import admin
 from .models import User, UserAddress, Courier, Restaurant, RestaurantGroup, RestaurantDish, RestaurantAttribute, Order, OrderDish, OrderAttribute, Ticket
 
-admin.site.register(User)
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['login', 'first_name', 'last_name']
+
+
 admin.site.register(UserAddress)
 admin.site.register(Courier)
 admin.site.register(Restaurant)
