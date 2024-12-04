@@ -25,6 +25,7 @@ class Restaurant(models.Model):
 
 class RestaurantGroup(models.Model):
     id_restaurant = models.ForeignKey(Restaurant, verbose_name="ID ресторана", on_delete=models.CASCADE)
+    title = models.CharField(verbose_name="Название", max_length=64)
     info = models.TextField(verbose_name="Описание")
 
 
