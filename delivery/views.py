@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
@@ -73,6 +73,15 @@ class RestaurantAttributeViewSet(viewsets.ModelViewSet):
     serializer_class = RestaurantAttributeSerializer
     filter_backends = [SearchFilter]
     search_fields = ['title']
+
+    @action(methods=["POST"], detail=True)
+    def change_attribute(self, request, pk=None):
+        attribute = self.get_object()
+        serializer = RestaurantAttributeSerializer(attribute, data=request.data, partial=True)
+        if serializer.is_valid():
+            attribute.save()
+            return Response({"response": "Атрибут изменён"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
