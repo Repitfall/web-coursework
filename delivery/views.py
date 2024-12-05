@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
+import django_filters
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -42,11 +43,21 @@ class RestaurantGroupViewSet(viewsets.ModelViewSet):
     search_fields = ['id', 'title']
 
 
+class RestaurantDishFilter(django_filters.FilterSet):
+    min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gt")
+    max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lt")
+
+    class Meta:
+        model = RestaurantDish
+        fields = "__all__"
+
+
 class RestaurantDishViewSet(viewsets.ModelViewSet):
     queryset = RestaurantDish.objects.all()
     serializer_class = RestaurantDishSerializer
     filter_backends = [SearchFilter]
     search_fields = ['id', 'title']
+    filterset_class = RestaurantDishFilter
     
     @action(methods=["GET"], detail=False)
     def recommended(self, request):
