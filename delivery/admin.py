@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 from .models import User, UserAddress, Courier, Restaurant, RestaurantGroup, RestaurantDish, RestaurantAttribute, Order, OrderDish, OrderAttribute, Ticket
 
@@ -19,20 +20,53 @@ class CourierAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display = ['last_name', 'first_name']
     search_fields = ['last_name']
 
+
+class RestaurantResource(resources.ModelResource):
+    class Meta:
+        model = Restaurant
+        fields = ['id', 'title', 'info']
+    
+    def dehydrate_info(self, resources):
+        return resources.info or "-"
+
+
 @admin.register(Restaurant)
 class RestaurantAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_class = RestaurantResource
     list_display = ['title']
     search_fields = ['title']
 
+
+class RestaurantGroupResource(resources.ModelResource):
+    class Meta:
+        model = RestaurantGroup
+        fields = ['id', 'id_restaurant__title', 'title', 'info']
+    
+    def dehydrate_info(self, resources):
+        return resources.info or "-"
+
+
 @admin.register(RestaurantGroup)
 class RestaurantGroupAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_class = RestaurantGroupResource
     list_display = ['title', 'id_restaurant']
     list_editable = ['id_restaurant']
     list_filter = ['id_restaurant']
     search_fields = ['title']
 
+
+class RestaurantDishResource(resources.ModelResource):
+    class Meta:
+        model = RestaurantDish
+        fields = ['id', 'id_group__id_restaurant__title', 'id_group__title', 'title', 'info']
+    
+    def dehydrate_info(self, resources):
+        return resources.info or "-"
+
+
 @admin.register(RestaurantDish)
 class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_class = RestaurantDishResource
     list_display = ['title', 'id_group']
     list_editable = ['id_group']
     list_filter = ['id_group']
