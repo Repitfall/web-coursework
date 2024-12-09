@@ -5,6 +5,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import User, UserAddress, Courier, Restaurant, RestaurantGroup, RestaurantDish, RestaurantAttribute, Order, OrderDish, OrderAttribute, Ticket
 from .serializers import UserSerializer, UserAddressSerializer, CourierSerializer, RestaurantSerializer, RestaurantGroupSerializer, RestaurantDishSerializer, RestaurantAttributeSerializer, OrderSerializer, OrderDishSerializer, OrderAttributeSerializer, TicketSerializer
 
@@ -44,18 +45,18 @@ class RestaurantGroupViewSet(viewsets.ModelViewSet):
 
 
 class RestaurantDishFilter(django_filters.FilterSet):
-    min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gt")
-    max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lt")
+    min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gt", label="Минимальная цена")
+    max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lt", label="Максимальная цена")
 
     class Meta:
         model = RestaurantDish
-        fields = "__all__"
+        fields = ['min_price', 'max_price']
 
 
 class RestaurantDishViewSet(viewsets.ModelViewSet):
     queryset = RestaurantDish.objects.all()
     serializer_class = RestaurantDishSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, DjangoFilterBackend]
     search_fields = ['id', 'title']
     filterset_class = RestaurantDishFilter
     
