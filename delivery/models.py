@@ -24,14 +24,14 @@ class Courier(models.Model):
 
 class Restaurant(models.Model):
     title = models.CharField(verbose_name="Название", max_length=64)
-    info = models.TextField(verbose_name="Описание")
+    info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
 
 
 class RestaurantGroup(models.Model):
     id_restaurant = models.ForeignKey(Restaurant, verbose_name="ID ресторана", on_delete=models.CASCADE)
     title = models.CharField(verbose_name="Название", max_length=64)
-    info = models.TextField(verbose_name="Описание")
+    info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
 
 
@@ -39,14 +39,14 @@ class RestaurantDish(models.Model):
     id_group = models.ForeignKey(RestaurantGroup, verbose_name="ID группы", on_delete=models.CASCADE)
     title = models.CharField(verbose_name="Название", max_length=128)
     price = models.IntegerField(verbose_name="Цена")
-    info = models.TextField(verbose_name="Описание")
+    info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
 
 
 class RestaurantAttribute(models.Model):
     id_dish = models.ForeignKey(RestaurantDish, verbose_name="ID блюда", on_delete=models.CASCADE)
     title = models.CharField(verbose_name="Название", max_length=128)
-    info = models.TextField(verbose_name="Описание")
+    info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
 
 
