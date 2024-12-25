@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django_filters",
     "import_export",
     "simple_history",
+    "drf_yasg",
 ]
 
 REST_FRAMEWORK = {
