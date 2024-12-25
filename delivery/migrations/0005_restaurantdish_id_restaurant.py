@@ -7,14 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('delivery', '0004_restaurantgroup_title'),
+        ("delivery", "0004_restaurantgroup_title"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='restaurantdish',
-            name='id_restaurant',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='delivery.restaurant', verbose_name='ID ресторана'),
+            model_name="restaurantdish",
+            name="id_restaurant",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="delivery.restaurant",
+                verbose_name="ID ресторана",
+            ),
             preserve_default=False,
         ),
     ]

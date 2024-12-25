@@ -8,116 +8,289 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Courier',
+            name="Courier",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(max_length=32, verbose_name='Имя')),
-                ('last_name', models.CharField(max_length=64, verbose_name='Фамилия')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=32, verbose_name="Имя")),
+                ("last_name", models.CharField(max_length=64, verbose_name="Фамилия")),
             ],
         ),
         migrations.CreateModel(
-            name='Restaurant',
+            name="Restaurant",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=64, verbose_name='Название')),
-                ('info', models.TextField(verbose_name='Описание')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=64, verbose_name="Название")),
+                ("info", models.TextField(verbose_name="Описание")),
             ],
         ),
         migrations.CreateModel(
-            name='RestaurantAttribute',
+            name="RestaurantAttribute",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=128, verbose_name='Название')),
-                ('info', models.TextField(verbose_name='Описание')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=128, verbose_name="Название")),
+                ("info", models.TextField(verbose_name="Описание")),
             ],
         ),
         migrations.CreateModel(
-            name='RestaurantDish',
+            name="RestaurantDish",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=128, verbose_name='Название')),
-                ('info', models.TextField(verbose_name='Описание')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=128, verbose_name="Название")),
+                ("info", models.TextField(verbose_name="Описание")),
             ],
         ),
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('login', models.CharField(max_length=32, unique=True, verbose_name='Логин')),
-                ('password', models.CharField(max_length=64, verbose_name='Хэш-пароля')),
-                ('email', models.EmailField(max_length=128, unique=True, verbose_name='Почта')),
-                ('first_name', models.CharField(max_length=32, verbose_name='Имя')),
-                ('last_name', models.CharField(max_length=64, verbose_name='Фамилия')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "login",
+                    models.CharField(max_length=32, unique=True, verbose_name="Логин"),
+                ),
+                (
+                    "password",
+                    models.CharField(max_length=64, verbose_name="Хэш-пароля"),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        max_length=128, unique=True, verbose_name="Почта"
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=32, verbose_name="Имя")),
+                ("last_name", models.CharField(max_length=64, verbose_name="Фамилия")),
             ],
         ),
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comment', models.TextField(verbose_name='Комментарий')),
-                ('id_courier', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.courier', verbose_name='ID курьера')),
-                ('id_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.user', verbose_name='ID пользователя')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("comment", models.TextField(verbose_name="Комментарий")),
+                (
+                    "id_courier",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.courier",
+                        verbose_name="ID курьера",
+                    ),
+                ),
+                (
+                    "id_user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.user",
+                        verbose_name="ID пользователя",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='OrderDish',
+            name="OrderDish",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('count', models.IntegerField(verbose_name='Количество')),
-                ('id_order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.order', verbose_name='ID заказа')),
-                ('dish', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.restaurantdish', verbose_name='ID блюда')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("count", models.IntegerField(verbose_name="Количество")),
+                (
+                    "id_order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.order",
+                        verbose_name="ID заказа",
+                    ),
+                ),
+                (
+                    "dish",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.restaurantdish",
+                        verbose_name="ID блюда",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='OrderAttribute',
+            name="OrderAttribute",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('id_dish', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.orderdish', verbose_name='ID блюда в заказе')),
-                ('id_attribute', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.restaurantattribute', verbose_name='ID атрибута')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "id_dish",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.orderdish",
+                        verbose_name="ID блюда в заказе",
+                    ),
+                ),
+                (
+                    "id_attribute",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.restaurantattribute",
+                        verbose_name="ID атрибута",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='restaurantattribute',
-            name='id_dish',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.restaurantdish', verbose_name='ID блюда'),
+            model_name="restaurantattribute",
+            name="id_dish",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="delivery.restaurantdish",
+                verbose_name="ID блюда",
+            ),
         ),
         migrations.CreateModel(
-            name='RestaurantGroup',
+            name="RestaurantGroup",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('info', models.TextField(verbose_name='Описание')),
-                ('id_restaurant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.restaurant', verbose_name='ID ресторана')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("info", models.TextField(verbose_name="Описание")),
+                (
+                    "id_restaurant",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.restaurant",
+                        verbose_name="ID ресторана",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='restaurantdish',
-            name='id_group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.restaurantgroup', verbose_name='ID группы'),
+            model_name="restaurantdish",
+            name="id_group",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="delivery.restaurantgroup",
+                verbose_name="ID группы",
+            ),
         ),
         migrations.CreateModel(
-            name='Tickets',
+            name="Tickets",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comment', models.TextField(verbose_name='Комментарий')),
-                ('id_order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.order', verbose_name='ID заказа')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("comment", models.TextField(verbose_name="Комментарий")),
+                (
+                    "id_order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.order",
+                        verbose_name="ID заказа",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='UserAddress',
+            name="UserAddress",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('address', models.CharField(max_length=256, verbose_name='Адрес')),
-                ('id_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.user', verbose_name='ID пользователя')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("address", models.CharField(max_length=256, verbose_name="Адрес")),
+                (
+                    "id_user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="delivery.user",
+                        verbose_name="ID пользователя",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='order',
-            name='id_address',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='delivery.useraddress', verbose_name='ID адреса доставки'),
+            model_name="order",
+            name="id_address",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="delivery.useraddress",
+                verbose_name="ID адреса доставки",
+            ),
         ),
     ]

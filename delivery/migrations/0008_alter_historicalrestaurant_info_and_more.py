@@ -6,48 +6,48 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('delivery', '0007_historicalcourier_historicalorder_and_more'),
+        ("delivery", "0007_historicalcourier_historicalorder_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalrestaurant',
-            name='info',
-            field=models.TextField(blank=True, verbose_name='Описание'),
+            model_name="historicalrestaurant",
+            name="info",
+            field=models.TextField(blank=True, verbose_name="Описание"),
         ),
         migrations.AlterField(
-            model_name='historicalrestaurantattribute',
-            name='info',
-            field=models.TextField(blank=True, verbose_name='Описание'),
+            model_name="historicalrestaurantattribute",
+            name="info",
+            field=models.TextField(blank=True, verbose_name="Описание"),
         ),
         migrations.AlterField(
-            model_name='historicalrestaurantdish',
-            name='info',
-            field=models.TextField(blank=True, verbose_name='Описание'),
+            model_name="historicalrestaurantdish",
+            name="info",
+            field=models.TextField(blank=True, verbose_name="Описание"),
         ),
         migrations.AlterField(
-            model_name='historicalrestaurantgroup',
-            name='info',
-            field=models.TextField(blank=True, verbose_name='Описание'),
+            model_name="historicalrestaurantgroup",
+            name="info",
+            field=models.TextField(blank=True, verbose_name="Описание"),
         ),
         migrations.AlterField(
-            model_name='restaurant',
-            name='info',
-            field=models.TextField(blank=True, verbose_name='Описание'),
+            model_name="restaurant",
+            name="info",
+            field=models.TextField(blank=True, verbose_name="Описание"),
         ),
         migrations.AlterField(
-            model_name='restaurantattribute',
-            name='info',
-            field=models.TextField(blank=True, verbose_name='Описание'),
+            model_name="restaurantattribute",
+            name="info",
+            field=models.TextField(blank=True, verbose_name="Описание"),
         ),
         migrations.AlterField(
-            model_name='restaurantdish',
-            name='info',
-            field=models.TextField(blank=True, verbose_name='Описание'),
+            model_name="restaurantdish",
+            name="info",
+            field=models.TextField(blank=True, verbose_name="Описание"),
         ),
         migrations.AlterField(
-            model_name='restaurantgroup',
-            name='info',
-            field=models.TextField(blank=True, verbose_name='Описание'),
+            model_name="restaurantgroup",
+            name="info",
+            field=models.TextField(blank=True, verbose_name="Описание"),
         ),
     ]

@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import include
 from django.urls import path
@@ -21,19 +22,16 @@ from delivery import views
 from rest_framework import routers
 
 router = routers.SimpleRouter()
-router.register('users', views.UserViewSet)
-router.register('addresses', views.UserAddressViewSet)
-router.register('couriers', views.CourierViewSet)
-router.register('restaurants', views.RestaurantViewSet)
-router.register('groups', views.RestaurantGroupViewSet)
-router.register('dishes', views.RestaurantDishViewSet)
-router.register('attributes', views.RestaurantAttributeViewSet)
-router.register('orders', views.OrderViewSet)
-router.register('orderdishes', views.OrderDishViewSet)
-router.register('orderattributes', views.OrderAttributeViewSet)
-router.register('tickets', views.TicketViewSet)
+router.register("users", views.UserViewSet)
+router.register("addresses", views.UserAddressViewSet)
+router.register("couriers", views.CourierViewSet)
+router.register("restaurants", views.RestaurantViewSet)
+router.register("groups", views.RestaurantGroupViewSet)
+router.register("dishes", views.RestaurantDishViewSet)
+router.register("attributes", views.RestaurantAttributeViewSet)
+router.register("orders", views.OrderViewSet)
+router.register("orderdishes", views.OrderDishViewSet)
+router.register("orderattributes", views.OrderAttributeViewSet)
+router.register("tickets", views.TicketViewSet)
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
-]
+urlpatterns = [path("admin/", admin.site.urls), path("api/", include(router.urls))]

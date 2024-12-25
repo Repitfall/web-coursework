@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('delivery', '0002_rename_tickets_ticket'),
+        ("delivery", "0002_rename_tickets_ticket"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='restaurantdish',
-            name='price',
-            field=models.IntegerField(default=0, verbose_name='Цена'),
+            model_name="restaurantdish",
+            name="price",
+            field=models.IntegerField(default=0, verbose_name="Цена"),
             preserve_default=False,
         ),
     ]
