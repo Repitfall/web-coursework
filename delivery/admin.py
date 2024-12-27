@@ -73,6 +73,7 @@ class RestaurantGroupAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 class RestaurantDishResource(resources.ModelResource):
     class Meta:
         model = RestaurantDish
+        import_id_fields = ("id",)
         fields = [
             "id",
             "id_group__id_restaurant__title",
