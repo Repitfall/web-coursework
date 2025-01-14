@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django.core.cache import cache
 from .models import (
     User,
     UserAddress,
@@ -91,31 +92,39 @@ class RestaurantDishViewSet(viewsets.ModelViewSet):
 
     @action(methods=["GET"], detail=False)
     def recommended(self, request):
-        dishes = RestaurantDishSerializer(
-            RestaurantDish.objects.filter(
-                (
-                    Q(id_group__id_restaurant__title="Бургер Кинг")
-                    | Q(id_group__id_restaurant__title="Rostic's")
-                )
-                & ~Q(price__gte=300)
-            ),
-            many=True,
-        )
+        cache_key = "dishes_recommdended"
+        dishes = cache.get(cache_key)
+        if dishes is None:
+            dishes = RestaurantDishSerializer(
+                RestaurantDish.objects.filter(
+                    (
+                        Q(id_group__id_restaurant__title="Бургер Кинг")
+                        | Q(id_group__id_restaurant__title="Rostic's")
+                    )
+                    & ~Q(price__gte=300)
+                ),
+                many=True,
+            )
+            cache.set(cache_key, dishes, timeout=60*60)
         return Response({"Рекомендованное": dishes.data})
 
     @action(methods=["GET"], detail=False)
     def premium(self, request):
-        dishes = RestaurantDishSerializer(
-            RestaurantDish.objects.filter(
-                (
-                    Q(id_group__id_restaurant__title="Бургер Кинг")
-                    | Q(id_group__id_restaurant__title="Вкусно - и точка")
-                )
-                & ~Q(price__lte=300)
-                & Q(id_group__title="Говядина")
-            ),
-            many=True,
-        )
+        cache_key = "dishes_recommdended"
+        dishes = cache.get(cache_key)
+        if dishes is None:
+            dishes = RestaurantDishSerializer(
+                RestaurantDish.objects.filter(
+                    (
+                        Q(id_group__id_restaurant__title="Бургер Кинг")
+                        | Q(id_group__id_restaurant__title="Вкусно - и точка")
+                    )
+                    & ~Q(price__lte=300)
+                    & Q(id_group__title="Говядина")
+                ),
+                many=True,
+            )
+            cache.set(cache_key, dishes, timeout=60*60)
         return Response({"Премиум-бургеры": dishes.data})
 
 
