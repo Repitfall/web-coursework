@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +45,9 @@ INSTALLED_APPS = [
     "simple_history",
     "drf_yasg",
     "mailhog",
+    "django_celery_beat",
+    "django_celery_results",
+    "django_mailbox"
 ]
 
 REST_FRAMEWORK = {
@@ -135,5 +139,25 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "localhost"
+EMAIL_HOST = "mailhog"
 EMAIL_PORT = 1025
+EMAIL_USE_TLS = False
+
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_MODULES = ['delivery.tasks.tasks']
+CELERY_BEAT_SCHEDULE = {
+    'mail_send': {
+        'task': 'delivery.tasks.mail_send',
+        'schedule': crontab(),
+        'args': [
+            'customer@example.com',
+            'Тестовое письмо',
+            'Тестовый текст письма'
+        ],
+    }
+}
