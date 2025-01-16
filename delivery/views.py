@@ -110,7 +110,7 @@ class RestaurantDishViewSet(viewsets.ModelViewSet):
 
     @action(methods=["GET"], detail=False)
     def premium(self, request):
-        cache_key = "dishes_recommdended"
+        cache_key = "dishes_premium"
         dishes = cache.get(cache_key)
         if dishes is None:
             dishes = RestaurantDishSerializer(

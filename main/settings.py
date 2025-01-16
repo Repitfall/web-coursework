@@ -159,6 +159,10 @@ CELERY_BEAT_SCHEDULE = {
             'Тестовое письмо',
             'Тестовый текст письма'
         ],
+    },
+    'cache_dishes_recommended': {
+        'task': 'delivery.tasks.cache_dishes_recommended',
+        'schedule': crontab(minute=0)
     }
 }
 
