@@ -92,7 +92,7 @@ class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display = ["title", "id_group"]
     list_editable = ["id_group"]
     list_filter = ["id_group"]
-    search_fields = ["title"]
+    search_fields = ["title", "info"]
 
 
 @admin.register(RestaurantAttribute)

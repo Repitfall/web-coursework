@@ -10,7 +10,6 @@ class User(models.Model):
     last_name = models.CharField(verbose_name="Фамилия", max_length=64)
     history = HistoricalRecords()
 
-
 class UserAddress(models.Model):
     id_user = models.ForeignKey(
         User, verbose_name="ID пользователя", on_delete=models.CASCADE
@@ -22,6 +21,15 @@ class UserAddress(models.Model):
 class Courier(models.Model):
     first_name = models.CharField(verbose_name="Имя", max_length=32)
     last_name = models.CharField(verbose_name="Фамилия", max_length=64)
+    FOOT = "F"
+    BICYCLE = "B"
+    CAR = "C"
+    COURIER_TYPE = {
+        FOOT: "Foot",
+        BICYCLE: "Bicycle",
+        CAR: "Car",
+    }
+    type = models.CharField(max_length=1, choices=COURIER_TYPE, default=FOOT)
     history = HistoricalRecords()
 
 
@@ -29,6 +37,12 @@ class Restaurant(models.Model):
     title = models.CharField(verbose_name="Название", max_length=64)
     info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        ordering = ['title']
 
 
 class RestaurantGroup(models.Model):
@@ -38,6 +52,9 @@ class RestaurantGroup(models.Model):
     title = models.CharField(verbose_name="Название", max_length=64)
     info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return self.title
 
 
 class RestaurantDish(models.Model):
@@ -49,6 +66,9 @@ class RestaurantDish(models.Model):
     info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
 
+    def __str__(self):
+        return self.title
+
 
 class RestaurantAttribute(models.Model):
     id_dish = models.ForeignKey(
@@ -57,6 +77,9 @@ class RestaurantAttribute(models.Model):
     title = models.CharField(verbose_name="Название", max_length=128)
     info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return str(self.title)
 
 
 class Order(models.Model):
