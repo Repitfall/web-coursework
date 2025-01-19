@@ -1,18 +1,11 @@
 from django.db import models
 from simple_history.models import HistoricalRecords
+from django.contrib.auth.models import User
 
-
-class User(models.Model):
-    login = models.CharField(verbose_name="Логин", max_length=32, unique=True)
-    password = models.CharField(verbose_name="Хэш-пароля", max_length=64)
-    email = models.EmailField(verbose_name="Почта", max_length=128, unique=True)
-    first_name = models.CharField(verbose_name="Имя", max_length=32)
-    last_name = models.CharField(verbose_name="Фамилия", max_length=64)
-    history = HistoricalRecords()
 
 class UserAddress(models.Model):
     id_user = models.ForeignKey(
-        User, verbose_name="ID пользователя", on_delete=models.CASCADE
+        User, verbose_name="ID пользователя", on_delete=models.CASCADE, related_name="adresses"
     )
     address = models.CharField(verbose_name="Адрес", max_length=256)
     history = HistoricalRecords()
@@ -47,7 +40,7 @@ class Restaurant(models.Model):
 
 class RestaurantGroup(models.Model):
     id_restaurant = models.ForeignKey(
-        Restaurant, verbose_name="ID ресторана", on_delete=models.CASCADE
+        Restaurant, verbose_name="ID ресторана", on_delete=models.CASCADE, related_name="groups"
     )
     title = models.CharField(verbose_name="Название", max_length=64)
     info = models.TextField(verbose_name="Описание", blank=True)
@@ -59,7 +52,7 @@ class RestaurantGroup(models.Model):
 
 class RestaurantDish(models.Model):
     id_group = models.ForeignKey(
-        RestaurantGroup, verbose_name="ID группы", on_delete=models.CASCADE
+        RestaurantGroup, verbose_name="ID группы", on_delete=models.CASCADE, related_name="dishes"
     )
     title = models.CharField(verbose_name="Название", max_length=128)
     price = models.IntegerField(verbose_name="Цена")
@@ -72,7 +65,7 @@ class RestaurantDish(models.Model):
 
 class RestaurantAttribute(models.Model):
     id_dish = models.ForeignKey(
-        RestaurantDish, verbose_name="ID блюда", on_delete=models.CASCADE
+        RestaurantDish, verbose_name="ID блюда", on_delete=models.CASCADE, related_name="attributes"
     )
     title = models.CharField(verbose_name="Название", max_length=128)
     info = models.TextField(verbose_name="Описание", blank=True)
@@ -84,13 +77,13 @@ class RestaurantAttribute(models.Model):
 
 class Order(models.Model):
     id_user = models.ForeignKey(
-        User, verbose_name="ID пользователя", on_delete=models.CASCADE
+        User, verbose_name="ID пользователя", on_delete=models.CASCADE, related_name="orders"
     )
     id_courier = models.ForeignKey(
-        Courier, verbose_name="ID курьера", on_delete=models.CASCADE
+        Courier, verbose_name="ID курьера", on_delete=models.CASCADE, related_name="orders"
     )
     id_address = models.ForeignKey(
-        UserAddress, verbose_name="ID адреса доставки", on_delete=models.CASCADE
+        UserAddress, verbose_name="ID адреса доставки", on_delete=models.CASCADE, related_name="orders"
     )
     comment = models.TextField(verbose_name="Комментарий")
     history = HistoricalRecords()
@@ -98,10 +91,10 @@ class Order(models.Model):
 
 class OrderDish(models.Model):
     id_order = models.ForeignKey(
-        Order, verbose_name="ID заказа", on_delete=models.CASCADE
+        Order, verbose_name="ID заказа", on_delete=models.CASCADE, related_name="order_dishes"
     )
     dish = models.ForeignKey(
-        RestaurantDish, verbose_name="ID блюда", on_delete=models.CASCADE
+        RestaurantDish, verbose_name="ID блюда", on_delete=models.CASCADE, related_name="order_dishes"
     )
     count = models.IntegerField(verbose_name="Количество")
     history = HistoricalRecords()
@@ -109,17 +102,17 @@ class OrderDish(models.Model):
 
 class OrderAttribute(models.Model):
     id_dish = models.ForeignKey(
-        OrderDish, verbose_name="ID блюда в заказе", on_delete=models.CASCADE
+        OrderDish, verbose_name="ID блюда в заказе", on_delete=models.CASCADE, related_name="order_attributes"
     )
     id_attribute = models.ForeignKey(
-        RestaurantAttribute, verbose_name="ID атрибута", on_delete=models.CASCADE
+        RestaurantAttribute, verbose_name="ID атрибута", on_delete=models.CASCADE, related_name="order_attributes"
     )
     history = HistoricalRecords()
 
 
 class Ticket(models.Model):
     id_order = models.ForeignKey(
-        Order, verbose_name="ID заказа", on_delete=models.CASCADE
+        Order, verbose_name="ID заказа", on_delete=models.CASCADE, related_name="tickets"
     )
     comment = models.TextField(verbose_name="Комментарий")
     history = HistoricalRecords()

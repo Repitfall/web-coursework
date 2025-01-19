@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "mailhog",
     "django_celery_beat",
     "django_celery_results",
-    "django_mailbox"
+    "django_mailbox",
 ]
 
 REST_FRAMEWORK = {
@@ -176,3 +176,6 @@ CACHES = {
         }
     }
 }
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'

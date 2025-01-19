@@ -6,9 +6,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import render
 from django.core.cache import cache
+from django.contrib.auth.models import User
 from .models import (
-    User,
     UserAddress,
     Courier,
     Restaurant,
@@ -39,7 +40,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [SearchFilter]
-    search_fields = ["id", "login", "last_name"]
+    search_fields = ["id", "username", "last_name"]
 
 
 class UserAddressViewSet(viewsets.ModelViewSet):
@@ -171,3 +172,11 @@ class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     search_fields = ["id"]
+
+
+def index(request):
+    count_restaurants = Restaurant.objects.all().count()
+    context = {
+        'count_restaurants': count_restaurants,
+    }
+    return render(request, 'index.html', context)

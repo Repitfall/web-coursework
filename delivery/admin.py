@@ -2,7 +2,6 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 from .models import (
-    User,
     UserAddress,
     Courier,
     Restaurant,
@@ -14,13 +13,6 @@ from .models import (
     OrderAttribute,
     Ticket,
 )
-
-
-@admin.register(User)
-class UserAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    list_display = ["login", "first_name", "last_name"]
-    search_fields = ["login"]
-    fields = ["last_name", "first_name"]
 
 
 @admin.register(UserAddress)
@@ -86,6 +78,10 @@ class RestaurantDishResource(resources.ModelResource):
         return resources.info or "-"
 
 
+class RestaurantAttributeInline(admin.StackedInline):
+    model = RestaurantAttribute
+
+
 @admin.register(RestaurantDish)
 class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = RestaurantDishResource
@@ -93,6 +89,7 @@ class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_editable = ["id_group"]
     list_filter = ["id_group"]
     search_fields = ["title", "info"]
+    inlines = [RestaurantAttributeInline]
 
 
 @admin.register(RestaurantAttribute)

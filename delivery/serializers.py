@@ -1,7 +1,6 @@
 import re
 from rest_framework import serializers
 from .models import (
-    User,
     UserAddress,
     Courier,
     Restaurant,
@@ -13,21 +12,22 @@ from .models import (
     OrderAttribute,
     Ticket,
 )
+from django.contrib.auth.models import User
 
 
 # ТРЕТИЙ СПОСОБ ВАЛИДАЦИИ
-def is_login_unique(value):
+def is_username_unique(value):
     if User.objects.filter(login=value).exists():
         raise serializers.ValidationError("Данный логин уже занят")
     return value
 
 
 class UserSerializer(serializers.ModelSerializer):
-    login = serializers.CharField(validators=[is_login_unique])
+    login = serializers.CharField(validators=[is_username_unique])
 
     class Meta:
         model = User
-        fields = ["login", "password", "email", "first_name", "last_name"]
+        fields = ["username", "password", "email", "first_name", "last_name"]
 
     # ПЕРВЫЙ СПОСОБ ВАЛИДАЦИИ
     def validate(self, values):
