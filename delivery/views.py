@@ -176,6 +176,9 @@ class TicketViewSet(viewsets.ModelViewSet):
 
 
 def index(request):
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
+    
     count_restaurants = Restaurant.objects.all().count()
     dodo_exists = Restaurant.objects.filter(title = "Додо Пицца").exists()
     min_price_dish = RestaurantDish.objects.aggregate(Min("price"))["price__min"]
@@ -185,5 +188,6 @@ def index(request):
         'restaurants': restaurants,
         'min_price_dish': min_price_dish,
         'dodo_exists': dodo_exists,
+        'num_visits': num_visits,
     }
     return render(request, 'index.html', context)
