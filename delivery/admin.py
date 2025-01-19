@@ -84,12 +84,21 @@ class RestaurantAttributeInline(admin.StackedInline):
 
 @admin.register(RestaurantDish)
 class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    date_hierarchy = "date_created"
     resource_class = RestaurantDishResource
-    list_display = ["title", "id_group"]
-    list_editable = ["id_group"]
+    list_display = ["title", "id_group", "date_created", "short_description"]
+    raw_id_fields = ["id_group"]
+    readonly_fields = ["date_created"]
     list_filter = ["id_group"]
     search_fields = ["title", "info"]
     inlines = [RestaurantAttributeInline]
+
+    def short_description(self, obj):
+        return (
+            obj.info[:30] + "..."
+            if len(obj.info) > 30
+            else obj.info
+        )
 
 
 @admin.register(RestaurantAttribute)

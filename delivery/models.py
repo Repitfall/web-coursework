@@ -57,6 +57,8 @@ class RestaurantDish(models.Model):
     title = models.CharField(verbose_name="Название", max_length=128)
     price = models.IntegerField(verbose_name="Цена")
     info = models.TextField(verbose_name="Описание", blank=True)
+    date_created = models.DateField(auto_now_add=True)
+    date_updated = models.DateField(auto_now=True)
     history = HistoricalRecords()
 
     def __str__(self):
@@ -86,6 +88,8 @@ class Order(models.Model):
         UserAddress, verbose_name="ID адреса доставки", on_delete=models.CASCADE, related_name="orders"
     )
     comment = models.TextField(verbose_name="Комментарий")
+    date_created = models.DateField(auto_now_add=True)
+    date_updated = models.DateField(auto_now=True)
     history = HistoricalRecords()
 
 
