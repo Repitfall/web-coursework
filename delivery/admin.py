@@ -86,9 +86,9 @@ class RestaurantAttributeInline(admin.StackedInline):
 class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     date_hierarchy = "date_created"
     resource_class = RestaurantDishResource
-    list_display = ["title", "id_group", "date_created", "short_description"]
+    list_display = ["title", "id_group", "id_group__id_restaurant", "date_created", "date_published", "date_updated", "short_description"]
     raw_id_fields = ["id_group"]
-    readonly_fields = ["date_created"]
+    readonly_fields = ["date_created", "date_updated"]
     list_filter = ["id_group"]
     search_fields = ["title", "info"]
     inlines = [RestaurantAttributeInline]

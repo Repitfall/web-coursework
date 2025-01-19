@@ -1,9 +1,23 @@
 {% extends "base.html" %}
 
 {% block title %}
-Доставка еды из ресторанов
+    Доставка еды из ресторанов
 {% endblock %}
 
 {% block content %}
-Что-то
+    <h2>Количество ресторанов: {{ count_restaurants }}</h2>
+    <h3>Самое дешёвое блюдо стоит всего {{ min_price_dish }} рублей!</h3>
+    <div class="row">
+        {% for restaurant in restaurants %}
+            <div class="col-4">
+                <div class="text-center border border-2 m-3">
+                    <img class="m-2" src="{{ restaurant.logo.url }}" alt="Логотип {{ restaurant.title }}" height="300">
+                    <p>
+                        {{ restaurant.title }}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
 {% endblock %}

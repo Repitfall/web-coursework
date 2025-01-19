@@ -1,6 +1,7 @@
 from django.db import models
 from simple_history.models import HistoricalRecords
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class UserAddress(models.Model):
@@ -9,6 +10,9 @@ class UserAddress(models.Model):
     )
     address = models.CharField(verbose_name="Адрес", max_length=256)
     history = HistoricalRecords()
+
+    class Meta:
+        verbose_name_plural = "Адреса пользователей"
 
 
 class Courier(models.Model):
@@ -25,10 +29,14 @@ class Courier(models.Model):
     type = models.CharField(max_length=1, choices=COURIER_TYPE, default=FOOT)
     history = HistoricalRecords()
 
+    class Meta:
+        verbose_name_plural = "Курьеры"
+
 
 class Restaurant(models.Model):
     title = models.CharField(verbose_name="Название", max_length=64)
     info = models.TextField(verbose_name="Описание", blank=True)
+    logo = models.ImageField(verbose_name="Логотип", upload_to ='uploads/')
     history = HistoricalRecords()
 
     def __str__(self):
@@ -36,6 +44,7 @@ class Restaurant(models.Model):
     
     class Meta:
         ordering = ['title']
+        verbose_name_plural = "Рестораны"
 
 
 class RestaurantGroup(models.Model):
@@ -48,6 +57,9 @@ class RestaurantGroup(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        verbose_name_plural = "Группы блюд"
 
 
 class RestaurantDish(models.Model):
@@ -57,12 +69,16 @@ class RestaurantDish(models.Model):
     title = models.CharField(verbose_name="Название", max_length=128)
     price = models.IntegerField(verbose_name="Цена")
     info = models.TextField(verbose_name="Описание", blank=True)
-    date_created = models.DateField(auto_now_add=True)
-    date_updated = models.DateField(auto_now=True)
+    date_created = models.DateField(verbose_name="Дата создания", auto_now_add=True)
+    date_published = models.DateField(verbose_name="Дата опубликования", auto_now_add=True)
+    date_updated = models.DateField(verbose_name="Дата изменения", auto_now=True)
     history = HistoricalRecords()
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        verbose_name_plural = "Блюда"
 
 
 class RestaurantAttribute(models.Model):
@@ -75,6 +91,9 @@ class RestaurantAttribute(models.Model):
 
     def __str__(self):
         return str(self.title)
+    
+    class Meta:
+        verbose_name_plural = "Атрибуты блюд"
 
 
 class Order(models.Model):
@@ -88,9 +107,12 @@ class Order(models.Model):
         UserAddress, verbose_name="ID адреса доставки", on_delete=models.CASCADE, related_name="orders"
     )
     comment = models.TextField(verbose_name="Комментарий")
-    date_created = models.DateField(auto_now_add=True)
-    date_updated = models.DateField(auto_now=True)
+    date_created = models.DateField(verbose_name="Дата создания", auto_now_add=True)
+    date_updated = models.DateField(verbose_name="Дата изменения", auto_now=True)
     history = HistoricalRecords()
+
+    class Meta:
+        verbose_name_plural = "Заказы"
 
 
 class OrderDish(models.Model):
@@ -103,6 +125,9 @@ class OrderDish(models.Model):
     count = models.IntegerField(verbose_name="Количество")
     history = HistoricalRecords()
 
+    class Meta:
+        verbose_name_plural = "Заказанные блюда"
+
 
 class OrderAttribute(models.Model):
     id_dish = models.ForeignKey(
@@ -113,6 +138,9 @@ class OrderAttribute(models.Model):
     )
     history = HistoricalRecords()
 
+    class Meta:
+        verbose_name_plural = "Атрибуты заказанных блюд"
+
 
 class Ticket(models.Model):
     id_order = models.ForeignKey(
@@ -120,3 +148,6 @@ class Ticket(models.Model):
     )
     comment = models.TextField(verbose_name="Комментарий")
     history = HistoricalRecords()
+
+    class Meta:
+        verbose_name_plural = "Тикеты"

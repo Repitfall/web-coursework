@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Min
 from django.shortcuts import render
 from django.core.cache import cache
 from django.contrib.auth.models import User
@@ -176,7 +177,13 @@ class TicketViewSet(viewsets.ModelViewSet):
 
 def index(request):
     count_restaurants = Restaurant.objects.all().count()
+    dodo_exists = Restaurant.objects.filter(title = "Додо Пицца").exists()
+    min_price_dish = RestaurantDish.objects.aggregate(Min("price"))["price__min"]
+    restaurants = Restaurant.objects.all().order_by("title")
     context = {
         'count_restaurants': count_restaurants,
+        'restaurants': restaurants,
+        'min_price_dish': min_price_dish,
+        'dodo_exists': dodo_exists,
     }
     return render(request, 'index.html', context)
