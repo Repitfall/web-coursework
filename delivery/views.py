@@ -1,15 +1,17 @@
 from django.shortcuts import render
 from django.db.models import Q
 import django_filters
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Min
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login as dj_login, logout
 from .models import (
     UserAddress,
     Courier,
@@ -30,6 +32,10 @@ from .serializers import (
     OrderSerializer,
     OrderDishSerializer,
     TicketSerializer,
+)
+from .forms import (
+    LoginForm,
+    RegisterForm
 )
 
 
@@ -150,12 +156,10 @@ def index(request):
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1
     
-    count_restaurants = Restaurant.objects.count()
     dodo_exists = Restaurant.objects.filter(title = "Додо Пицца").exists()
     min_price_dish = RestaurantDish.objects.aggregate(Min("price"))["price__min"]
     restaurants = Restaurant.objects.order_by("title")
     context = {
-        'count_restaurants': count_restaurants,
         'restaurants': restaurants,
         'min_price_dish': min_price_dish,
         'dodo_exists': dodo_exists,
@@ -163,8 +167,37 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-def login(request):
-    pass
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            user = authenticate(request, username=data['username'], password=data['password'])
+            if user is None:
+                return HttpResponse('Неверные данные')
+            if not user.is_active:
+                return HttpResponse('Аккаунт заблокирован')
+            dj_login(request, user)
+            request.session.set_expiry(300)
+            return redirect('/')
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form': form})
 
-def register(request):
+def user_register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=True)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+    else:
+        form = RegisterForm()
+    return render(request, 'register.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    return redirect('/')
+
+def user_order(request):
     pass

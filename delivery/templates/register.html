@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Доставка | Регистрация
+{% endblock %}
+
+{% block content %}
+<div class="form-signin w-50 m-auto">
+    <form method="post">
+        <h1 class="h3 mb-3 fw-normal">Регистрация аккаунта</h1>
+  
+        <div class="form-floating my-3">
+            <input type="text" class="form-control" name="username" id="id_username" placeholder="Логин" required>
+            <label for="id_username">Логин</label>
+        </div>
+        <div class="form-floating my-3">
+            <input type="password" class="form-control" name="password" id="id_password" placeholder="Пароль" required>
+            <label for="id_password">Пароль</label>
+        </div>
+        <div class="form-floating my-3">
+            <input type="password" class="form-control" name="password2" id="id_password2" placeholder="Повтор пароля" required>
+            <label for="id_password2">Повтор пароля</label>
+        </div>
+        
+        {% csrf_token %}
+  
+        <button class="btn btn-primary w-100 my-3" type="submit">Зарегистрироваться</button>
+        <div class="text-center">
+            <p>Есть аккаунт? <a href="/login">Авторизоваться</a></p>
+        </div>
+    </form>
+</div>
+{% endblock %}

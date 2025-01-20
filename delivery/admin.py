@@ -16,8 +16,8 @@ from .models import (
 @admin.register(UserAddress)
 class UserAddressAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display = ["id_user", "address"]
-    list_filter = ["id_user"]
-    search_fields = ["address"]
+    raw_id_fields = ["id_user"]
+    search_fields = ["id_user", "address"]
 
 
 @admin.register(Courier)
@@ -35,11 +35,16 @@ class RestaurantResource(resources.ModelResource):
         return resources.info or "-"
 
 
+class RestaurantGroupInline(admin.StackedInline):
+    model = RestaurantGroup
+
+
 @admin.register(Restaurant)
 class RestaurantAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = RestaurantResource
     list_display = ["title"]
     search_fields = ["title"]
+    inlines = [RestaurantGroupInline]
 
 
 class RestaurantGroupResource(resources.ModelResource):
@@ -51,13 +56,17 @@ class RestaurantGroupResource(resources.ModelResource):
         return resources.info or "-"
 
 
+class RestaurantDishInline(admin.StackedInline):
+    model = RestaurantDish
+
+
 @admin.register(RestaurantGroup)
 class RestaurantGroupAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = RestaurantGroupResource
     list_display = ["title", "id_restaurant"]
-    list_editable = ["id_restaurant"]
     list_filter = ["id_restaurant"]
     search_fields = ["title"]
+    inlines = [RestaurantDishInline]
 
 
 class RestaurantDishResource(resources.ModelResource):
@@ -94,10 +103,16 @@ class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
         )
 
 
+class OrderDishInline(admin.StackedInline):
+    model = OrderDish
+    raw_id_fields = ["id_dish"]
+
+
 @admin.register(Order)
 class OrderAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display = ["id", "id_user"]
     search_fields = ["id_user"]
+    inlines = [OrderDishInline]
 
 
 @admin.register(OrderDish)
