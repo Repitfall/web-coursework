@@ -22,9 +22,9 @@ class Courier(models.Model):
     BICYCLE = "B"
     CAR = "C"
     COURIER_TYPE = {
-        FOOT: "Foot",
-        BICYCLE: "Bicycle",
-        CAR: "Car",
+        FOOT: "Пеший",
+        BICYCLE: "Велосипед",
+        CAR: "Машина",
     }
     type = models.CharField(max_length=1, choices=COURIER_TYPE, default=FOOT)
     history = HistoricalRecords()

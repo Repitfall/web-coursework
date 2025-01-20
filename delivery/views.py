@@ -179,10 +179,10 @@ def index(request):
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1
     
-    count_restaurants = Restaurant.objects.all().count()
+    count_restaurants = Restaurant.objects.count()
     dodo_exists = Restaurant.objects.filter(title = "Додо Пицца").exists()
     min_price_dish = RestaurantDish.objects.aggregate(Min("price"))["price__min"]
-    restaurants = Restaurant.objects.all().order_by("title")
+    restaurants = Restaurant.objects.order_by("title")
     context = {
         'count_restaurants': count_restaurants,
         'restaurants': restaurants,
