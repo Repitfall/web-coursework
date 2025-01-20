@@ -16,10 +16,8 @@ from .models import (
     Restaurant,
     RestaurantGroup,
     RestaurantDish,
-    RestaurantAttribute,
     Order,
     OrderDish,
-    OrderAttribute,
     Ticket,
 )
 from .serializers import (
@@ -29,10 +27,8 @@ from .serializers import (
     RestaurantSerializer,
     RestaurantGroupSerializer,
     RestaurantDishSerializer,
-    RestaurantAttributeSerializer,
     OrderSerializer,
     OrderDishSerializer,
-    OrderAttributeSerializer,
     TicketSerializer,
 )
 
@@ -130,24 +126,6 @@ class RestaurantDishViewSet(viewsets.ModelViewSet):
         return Response({"Премиум-бургеры": dishes.data})
 
 
-class RestaurantAttributeViewSet(viewsets.ModelViewSet):
-    queryset = RestaurantAttribute.objects.all()
-    serializer_class = RestaurantAttributeSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ["title"]
-
-    @action(methods=["POST"], detail=True)
-    def change_attribute(self, request, pk=None):
-        attribute = self.get_object()
-        serializer = RestaurantAttributeSerializer(
-            attribute, data=request.data, partial=True
-        )
-        if serializer.is_valid():
-            attribute.save()
-            return Response({"response": "Атрибут изменён"})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -160,13 +138,6 @@ class OrderDishViewSet(viewsets.ModelViewSet):
     serializer_class = OrderDishSerializer
     filter_backends = [SearchFilter]
     search_fields = ["id_order"]
-
-
-class OrderAttributeViewSet(viewsets.ModelViewSet):
-    queryset = OrderAttribute.objects.all()
-    serializer_class = OrderAttributeSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ["id_dish"]
 
 
 class TicketViewSet(viewsets.ModelViewSet):
@@ -191,3 +162,9 @@ def index(request):
         'num_visits': num_visits,
     }
     return render(request, 'index.html', context)
+
+def login(request):
+    pass
+
+def register(request):
+    pass

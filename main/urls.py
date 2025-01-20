@@ -34,10 +34,8 @@ router.register("couriers", views.CourierViewSet)
 router.register("restaurants", views.RestaurantViewSet)
 router.register("groups", views.RestaurantGroupViewSet)
 router.register("dishes", views.RestaurantDishViewSet)
-router.register("attributes", views.RestaurantAttributeViewSet)
 router.register("orders", views.OrderViewSet)
 router.register("orderdishes", views.OrderDishViewSet)
-router.register("orderattributes", views.OrderAttributeViewSet)
 router.register("tickets", views.TicketViewSet)
 
 schema_view = get_schema_view(
@@ -55,6 +53,8 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('login/', views.login, name='login'),
+    path('register', views.register, name='register'),
     path(
         "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
     ),

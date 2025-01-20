@@ -13,6 +13,9 @@ class UserAddress(models.Model):
 
     class Meta:
         verbose_name_plural = "Адреса пользователей"
+    
+    def __str__(self):
+        return self.address
 
 
 class Courier(models.Model):
@@ -23,20 +26,24 @@ class Courier(models.Model):
     CAR = "C"
     COURIER_TYPE = {
         FOOT: "Пеший",
-        BICYCLE: "Велосипед",
-        CAR: "Машина",
+        BICYCLE: "На велосипеде",
+        CAR: "На машине",
     }
     type = models.CharField(max_length=1, choices=COURIER_TYPE, default=FOOT)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return self.last_name + self.first_name
 
     class Meta:
         verbose_name_plural = "Курьеры"
 
 
+
 class Restaurant(models.Model):
     title = models.CharField(verbose_name="Название", max_length=64)
     info = models.TextField(verbose_name="Описание", blank=True)
-    logo = models.ImageField(verbose_name="Логотип", upload_to ='uploads/')
+    logo = models.ImageField(verbose_name="Логотип", upload_to ='logos/')
     history = HistoricalRecords()
 
     def __str__(self):
@@ -70,8 +77,6 @@ class RestaurantDish(models.Model):
     price = models.IntegerField(verbose_name="Цена")
     info = models.TextField(verbose_name="Описание", blank=True)
     date_created = models.DateField(verbose_name="Дата создания", auto_now_add=True)
-    date_published = models.DateField(verbose_name="Дата опубликования", auto_now_add=True)
-    date_updated = models.DateField(verbose_name="Дата изменения", auto_now=True)
     history = HistoricalRecords()
 
     def __str__(self):
@@ -79,21 +84,6 @@ class RestaurantDish(models.Model):
     
     class Meta:
         verbose_name_plural = "Блюда"
-
-
-class RestaurantAttribute(models.Model):
-    id_dish = models.ForeignKey(
-        RestaurantDish, verbose_name="ID блюда", on_delete=models.CASCADE, related_name="attributes"
-    )
-    title = models.CharField(verbose_name="Название", max_length=128)
-    info = models.TextField(verbose_name="Описание", blank=True)
-    history = HistoricalRecords()
-
-    def __str__(self):
-        return str(self.title)
-    
-    class Meta:
-        verbose_name_plural = "Атрибуты блюд"
 
 
 class Order(models.Model):
@@ -108,8 +98,10 @@ class Order(models.Model):
     )
     comment = models.TextField(verbose_name="Комментарий")
     date_created = models.DateField(verbose_name="Дата создания", auto_now_add=True)
-    date_updated = models.DateField(verbose_name="Дата изменения", auto_now=True)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return "Заказ" + str(self.id)
 
     class Meta:
         verbose_name_plural = "Заказы"
@@ -119,27 +111,17 @@ class OrderDish(models.Model):
     id_order = models.ForeignKey(
         Order, verbose_name="ID заказа", on_delete=models.CASCADE, related_name="order_dishes"
     )
-    dish = models.ForeignKey(
+    id_dish = models.ForeignKey(
         RestaurantDish, verbose_name="ID блюда", on_delete=models.CASCADE, related_name="order_dishes"
     )
     count = models.IntegerField(verbose_name="Количество")
     history = HistoricalRecords()
 
+    def __str__(self):
+        return str(self.id_order) + " | Блюдо " + str(self.id_dish)
+
     class Meta:
         verbose_name_plural = "Заказанные блюда"
-
-
-class OrderAttribute(models.Model):
-    id_dish = models.ForeignKey(
-        OrderDish, verbose_name="ID блюда в заказе", on_delete=models.CASCADE, related_name="order_attributes"
-    )
-    id_attribute = models.ForeignKey(
-        RestaurantAttribute, verbose_name="ID атрибута", on_delete=models.CASCADE, related_name="order_attributes"
-    )
-    history = HistoricalRecords()
-
-    class Meta:
-        verbose_name_plural = "Атрибуты заказанных блюд"
 
 
 class Ticket(models.Model):
@@ -148,6 +130,9 @@ class Ticket(models.Model):
     )
     comment = models.TextField(verbose_name="Комментарий")
     history = HistoricalRecords()
+
+    def __str__(self):
+        return "Тикет " + str(self.id)
 
     class Meta:
         verbose_name_plural = "Тикеты"

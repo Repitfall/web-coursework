@@ -7,10 +7,8 @@ from .models import (
     Restaurant,
     RestaurantGroup,
     RestaurantDish,
-    RestaurantAttribute,
     Order,
     OrderDish,
-    OrderAttribute,
     Ticket,
 )
 
@@ -78,20 +76,15 @@ class RestaurantDishResource(resources.ModelResource):
         return resources.info or "-"
 
 
-class RestaurantAttributeInline(admin.StackedInline):
-    model = RestaurantAttribute
-
-
 @admin.register(RestaurantDish)
 class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     date_hierarchy = "date_created"
     resource_class = RestaurantDishResource
-    list_display = ["title", "id_group", "id_group__id_restaurant", "date_created", "date_published", "date_updated", "short_description"]
+    list_display = ["title", "id_group", "id_group__id_restaurant", "date_created", "short_description"]
     raw_id_fields = ["id_group"]
-    readonly_fields = ["date_created", "date_updated"]
+    readonly_fields = ["date_created"]
     list_filter = ["id_group"]
     search_fields = ["title", "info"]
-    inlines = [RestaurantAttributeInline]
 
     def short_description(self, obj):
         return (
@@ -99,14 +92,6 @@ class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
             if len(obj.info) > 30
             else obj.info
         )
-
-
-@admin.register(RestaurantAttribute)
-class RestaurantAttributeAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    list_display = ["title", "id_dish"]
-    list_editable = ["id_dish"]
-    list_filter = ["id_dish"]
-    search_fields = ["title"]
 
 
 @admin.register(Order)
@@ -119,12 +104,6 @@ class OrderAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 class OrderDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display = ["id", "id_order"]
     search_fields = ["id_order"]
-
-
-@admin.register(OrderAttribute)
-class OrderAttributeAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    list_display = ["id", "id_dish"]
-    search_fields = ["id_dish"]
 
 
 @admin.register(Ticket)

@@ -6,10 +6,8 @@ from .models import (
     Restaurant,
     RestaurantGroup,
     RestaurantDish,
-    RestaurantAttribute,
     Order,
     OrderDish,
-    OrderAttribute,
     Ticket,
 )
 from django.contrib.auth.models import User
@@ -104,12 +102,6 @@ class RestaurantDishSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class RestaurantAttributeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RestaurantAttribute
-        fields = "__all__"
-
-
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
@@ -119,12 +111,6 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderDishSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderDish
-        fields = "__all__"
-
-
-class OrderAttributeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderAttribute
         fields = "__all__"
 
 
