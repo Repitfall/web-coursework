@@ -8,8 +8,11 @@ from .serializers import RestaurantDishSerializer
 
 @shared_task
 def mail_send(recipient_email, subject, message):
-    send_mail(subject, message, 'noreply@example.com', [recipient_email], fail_silently=False)
+    send_mail(
+        subject, message, "noreply@example.com", [recipient_email], fail_silently=False
+    )
     return "Письмо отправлено!"
+
 
 @shared_task
 def cache_dishes_recommended():
@@ -19,9 +22,9 @@ def cache_dishes_recommended():
             (
                 Q(id_group__id_restaurant__title="Бургер Кинг")
                 | Q(id_group__id_restaurant__title="Rostic's")
-                )
+            )
             & ~Q(price__gte=300)
         ),
         many=True,
     )
-    cache.set(cache_key, dishes, timeout=60*60)
+    cache.set(cache_key, dishes, timeout=60 * 60)

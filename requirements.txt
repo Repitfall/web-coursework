@@ -3,8 +3,10 @@ asgiref==3.8.1
 astroid==3.3.8
 billiard==4.2.1
 black==24.10.0
+boto==2.49.0
 celery==5.4.0
 certifi==2024.12.14
+chardet==5.2.0
 charset-normalizer==3.4.1
 click==8.1.8
 click-didyoumean==0.3.1
@@ -22,12 +24,15 @@ django-debug-toolbar==5.0.1
 django-filter==24.3
 django-import-export==4.3.3
 django-mailbox==4.10.1
+django-pdf==1.0.2
 django-redis==5.4.0
 django-simple-history==3.7.0
 django-timezone-field==7.0
+django-wkhtmltopdf==3.4.0
 djangorestframework==3.15.2
 drf-yasg==1.21.8
 et_xmlfile==2.0.0
+ghettoq==0.4.5
 idna==3.10
 inflection==0.5.1
 isort==5.13.2
@@ -50,7 +55,9 @@ python-dateutil==2.9.0.post0
 pytz==2024.2
 PyYAML==6.0.2
 redis==5.2.1
+reportlab==4.2.5
 requests==2.32.3
+simplejson==3.19.3
 six==1.17.0
 sqlparse==0.5.2
 tablib==3.7.0

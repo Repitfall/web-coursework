@@ -52,11 +52,11 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('login/', views.user_login, name='login'),
-    path('register/', views.user_register, name='register'),
-    path('logout/', views.user_logout, name='logout'),
-    path('order/', views.user_order, name='order'),
+    path("", views.index, name="index"),
+    path("login/", views.user_login, name="login"),
+    path("register/", views.user_register, name="register"),
+    path("logout/", views.user_logout, name="logout"),
+    path("order/", views.user_order, name="order"),
     path(
         "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
     ),

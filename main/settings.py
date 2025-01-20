@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "django_mailbox",
     "debug_toolbar",
+    "wkhtmltopdf",
 ]
 
 REST_FRAMEWORK = {
@@ -152,48 +153,47 @@ CELERY_RESULT_BACKEND = "redis://redis:6379"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
-CELERY_TASK_MODULES = ['delivery.tasks.tasks']
+CELERY_TASK_MODULES = ["delivery.tasks.tasks"]
 CELERY_BEAT_SCHEDULE = {
-    'mail_send': {
-        'task': 'delivery.tasks.mail_send',
-        'schedule': crontab(),
-        'args': [
-            'customer@example.com',
-            'Тестовое письмо',
-            'Тестовый текст письма'
-        ],
+    "mail_send": {
+        "task": "delivery.tasks.mail_send",
+        "schedule": crontab(),
+        "args": ["customer@example.com", "Тестовое письмо", "Тестовый текст письма"],
     },
-    'cache_dishes_recommended': {
-        'task': 'delivery.tasks.cache_dishes_recommended',
-        'schedule': crontab(minute=0)
-    }
+    "cache_dishes_recommended": {
+        "task": "delivery.tasks.cache_dishes_recommended",
+        "schedule": crontab(minute=0),
+    },
 }
 
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379/0',  
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
     }
 }
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 INTERNAL_IPS = [
-    '127.0.0.1',
+    "127.0.0.1",
 ]
+
 
 def show_toolbar(request):
     return True
 
+
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
 }
 
 if DEBUG:
     import mimetypes
+
     mimetypes.add_type("application/javascript", ".js", True)

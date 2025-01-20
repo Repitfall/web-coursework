@@ -1,6 +1,12 @@
 from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
+from django.http import FileResponse
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.pdfbase import pdfmetrics, ttfonts
 from .models import (
     UserAddress,
     Courier,
@@ -89,18 +95,51 @@ class RestaurantDishResource(resources.ModelResource):
 class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     date_hierarchy = "date_created"
     resource_class = RestaurantDishResource
-    list_display = ["title", "id_group", "id_group__id_restaurant", "date_created", "short_description"]
+    list_display = [
+        "title",
+        "id_group",
+        "id_group__id_restaurant",
+        "date_created",
+        "short_description",
+    ]
     raw_id_fields = ["id_group"]
     readonly_fields = ["date_created"]
     list_filter = ["id_group"]
     search_fields = ["title", "info"]
+    actions = ["generate_pdf"]
 
     def short_description(self, obj):
-        return (
-            obj.info[:30] + "..."
-            if len(obj.info) > 30
-            else obj.info
-        )
+        return obj.info[:30] + "..." if len(obj.info) > 30 else obj.info
+
+    def generate_pdf(self, request, queryset):
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer, pagesize=letter)
+        y_pos = 10.5 * inch
+
+        pdfmetrics.registerFont(ttfonts.TTFont('Times-Roman', 'Times New Roman.ttf'))
+
+        for dish in queryset:
+            obj = p.beginText()
+            obj.setTextOrigin(inch, y_pos)
+            obj.setFont("Times-Roman", 14)
+            obj.textLine(f"Название: {dish.title}")
+            obj.textLine(f"Стоимость: {dish.price} рублей")
+            obj.textLine(f"Группа: {dish.id_group}")
+            obj.textLine(f"Ресторан: {dish.id_group.id_restaurant}")
+            obj.textLine("-" * 50)
+            
+            p.drawText(obj)
+            y_pos -= 1.5 * inch
+            if y_pos <= inch:
+                p.showPage()
+                y_pos = 10.5 * inch
+
+        p.save()
+
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename="dishes.pdf")
+
+    generate_pdf.short_description = "Экспортировать в PDF"
 
 
 class OrderDishInline(admin.StackedInline):

@@ -33,10 +33,7 @@ from .serializers import (
     OrderDishSerializer,
     TicketSerializer,
 )
-from .forms import (
-    LoginForm,
-    RegisterForm
-)
+from .forms import LoginForm, RegisterForm
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -109,7 +106,7 @@ class RestaurantDishViewSet(viewsets.ModelViewSet):
                 ),
                 many=True,
             )
-            cache.set(cache_key, dishes, timeout=60*60)
+            cache.set(cache_key, dishes, timeout=60 * 60)
         return Response({"Рекомендованное": dishes.data})
 
     @action(methods=["GET"], detail=False)
@@ -128,7 +125,7 @@ class RestaurantDishViewSet(viewsets.ModelViewSet):
                 ),
                 many=True,
             )
-            cache.set(cache_key, dishes, timeout=60*60)
+            cache.set(cache_key, dishes, timeout=60 * 60)
         return Response({"Премиум-бургеры": dishes.data})
 
 
@@ -153,51 +150,57 @@ class TicketViewSet(viewsets.ModelViewSet):
 
 
 def index(request):
-    num_visits = request.session.get('num_visits', 0)
-    request.session['num_visits'] = num_visits + 1
-    
-    dodo_exists = Restaurant.objects.filter(title = "Додо Пицца").exists()
+    num_visits = request.session.get("num_visits", 0)
+    request.session["num_visits"] = num_visits + 1
+
+    dodo_exists = Restaurant.objects.filter(title="Додо Пицца").exists()
     min_price_dish = RestaurantDish.objects.aggregate(Min("price"))["price__min"]
     restaurants = Restaurant.objects.order_by("title")
     context = {
-        'restaurants': restaurants,
-        'min_price_dish': min_price_dish,
-        'dodo_exists': dodo_exists,
-        'num_visits': num_visits,
+        "restaurants": restaurants,
+        "min_price_dish": min_price_dish,
+        "dodo_exists": dodo_exists,
+        "num_visits": num_visits,
     }
-    return render(request, 'index.html', context)
+    return render(request, "index.html", context)
+
 
 def user_login(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            user = authenticate(request, username=data['username'], password=data['password'])
+            user = authenticate(
+                request, username=data["username"], password=data["password"]
+            )
             if user is None:
-                return HttpResponse('Неверные данные')
+                return HttpResponse("Неверные данные")
             if not user.is_active:
-                return HttpResponse('Аккаунт заблокирован')
+                return HttpResponse("Аккаунт заблокирован")
             dj_login(request, user)
             request.session.set_expiry(300)
-            return redirect('/')
+            return redirect("/")
     else:
         form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, "login.html", {"form": form})
+
 
 def user_register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=True)
-            user.set_password(form.cleaned_data['password'])
+            user.set_password(form.cleaned_data["password"])
             user.save()
     else:
         form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, "register.html", {"form": form})
+
 
 def user_logout(request):
     logout(request)
-    return redirect('/')
+    return redirect("/")
+
 
 def user_order(request):
     pass
