@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.db.models import Q
 import django_filters
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth.decorators import login_required
 from django.db.models import Min
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as dj_login, logout
@@ -33,7 +34,7 @@ from .serializers import (
     OrderDishSerializer,
     TicketSerializer,
 )
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, CommentForm
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -78,10 +79,17 @@ class RestaurantDishFilter(django_filters.FilterSet):
     max_price = django_filters.NumberFilter(
         field_name="price", lookup_expr="lt", label="Максимальная цена"
     )
+    date = django_filters.DateFromToRangeFilter(
+        field_name="date_created", label="Диапазон дат публикации"
+    )
+    published = django_filters.BooleanFilter(
+        field_name="published", label="В открытом доступе"
+    )
+    info = django_filters.CharFilter(lookup_expr="icontains", label="Описание")
 
     class Meta:
         model = RestaurantDish
-        fields = ["min_price", "max_price"]
+        fields = ["min_price", "max_price", "date", "published", "info"]
 
 
 class RestaurantDishViewSet(viewsets.ModelViewSet):
@@ -142,6 +150,15 @@ class OrderDishViewSet(viewsets.ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["id_order"]
 
+    @action(methods=["POST"], detail=True)
+    def change_order_dish(self, request, pk=None):
+        order_dish = self.get_object()
+        serializer = OrderDishSerializer(order_dish, data=request.data, partial=True)
+        if serializer.is_valid():
+            order_dish.save()
+            return Response({"response": "Заказанное блюдо изменено"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
@@ -149,7 +166,42 @@ class TicketViewSet(viewsets.ModelViewSet):
     search_fields = ["id"]
 
 
-def index(request):
+def index(request, restaurant_slug=None, group_slug=None, dish_id=None):
+
+    if dish_id:
+        dish = get_object_or_404(RestaurantDish, id=dish_id)
+        context = {"dish": dish}
+        return render(request, "dish.html", context)
+
+    if restaurant_slug:
+        restaurant = get_object_or_404(Restaurant, slug=restaurant_slug)
+        groups = RestaurantGroup.objects.filter(id_restaurant=restaurant)
+        dishes = []
+        for group in groups:
+            dishes += RestaurantDish.objects.filter(id_group=group).exclude(
+                published=False
+            )
+        context = {
+            "restaurant": restaurant,
+            "groups": groups,
+            "dishes": dishes,
+        }
+
+        if group_slug:
+            group = get_object_or_404(
+                RestaurantGroup, slug=group_slug, id_restaurant=restaurant
+            )
+            dishes = RestaurantDish.objects.filter(id_group=group).exclude(
+                published=False
+            )
+            context = {
+                "restaurant": restaurant,
+                "groups": groups,
+                "dishes": dishes,
+            }
+
+        return render(request, "groups.html", context)
+
     num_visits = request.session.get("num_visits", 0)
     request.session["num_visits"] = num_visits + 1
 
@@ -202,5 +254,16 @@ def user_logout(request):
     return redirect("/")
 
 
-def user_order(request):
-    pass
+def search(request):
+    searching = request.GET.get("search")
+    if searching:
+        dishes = (
+            RestaurantDish.objects.filter(title__icontains=searching)
+            .exclude(published=False)
+            .select_related("id_group")
+            .select_related("id_restaurant")
+        )
+    else:
+        dishes = RestaurantDish.objects.all()
+    context = {"dishes": dishes}
+    return render(request, "search.html", context)

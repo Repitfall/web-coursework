@@ -116,7 +116,7 @@ class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
         p = canvas.Canvas(buffer, pagesize=letter)
         y_pos = 10.5 * inch
 
-        pdfmetrics.registerFont(ttfonts.TTFont('Times-Roman', 'Times New Roman.ttf'))
+        pdfmetrics.registerFont(ttfonts.TTFont("Times-Roman", "Times New Roman.ttf"))
 
         for dish in queryset:
             obj = p.beginText()
@@ -127,7 +127,7 @@ class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
             obj.textLine(f"Группа: {dish.id_group}")
             obj.textLine(f"Ресторан: {dish.id_group.id_restaurant}")
             obj.textLine("-" * 50)
-            
+
             p.drawText(obj)
             y_pos -= 1.5 * inch
             if y_pos <= inch:

@@ -34,7 +34,9 @@ class Courier(models.Model):
         CAR: "На машине",
     }
     type = models.CharField(max_length=1, choices=COURIER_TYPE, default=FOOT)
-    resume = models.FileField(verbose_name="Резюме", upload_to='couriers/', blank=True, null=True)
+    resume = models.FileField(
+        verbose_name="Резюме", upload_to="couriers/", blank=True, null=True
+    )
     url = models.URLField(verbose_name="Соцсеть для связи", blank=True, null=True)
     history = HistoricalRecords()
 
@@ -48,6 +50,7 @@ class Courier(models.Model):
 
 class Restaurant(models.Model):
     title = models.CharField(verbose_name="Название", max_length=64)
+    slug = models.SlugField(verbose_name="Ссылка", max_length=64)
     info = models.TextField(verbose_name="Описание", blank=True)
     logo = models.ImageField(verbose_name="Логотип", upload_to="logos/")
     history = HistoricalRecords()
@@ -69,6 +72,7 @@ class RestaurantGroup(models.Model):
         related_name="restaurant_groups",
     )
     title = models.CharField(verbose_name="Название", max_length=64)
+    slug = models.SlugField(verbose_name="Ссылка", max_length=64)
     info = models.TextField(verbose_name="Описание", blank=True)
     history = HistoricalRecords()
 
@@ -87,9 +91,11 @@ class RestaurantDish(models.Model):
         on_delete=models.CASCADE,
         related_name="restaurant_dishes",
     )
+    published = models.BooleanField(verbose_name="В открытом доступе")
     title = models.CharField(verbose_name="Название", max_length=128)
     price = models.IntegerField(verbose_name="Цена")
     info = models.TextField(verbose_name="Описание", blank=True)
+    pic = models.ImageField(verbose_name="Фотография", upload_to="dishes/")
     date_created = models.DateField(verbose_name="Дата создания", auto_now_add=True)
     history = HistoricalRecords()
 
@@ -99,6 +105,26 @@ class RestaurantDish(models.Model):
     class Meta:
         verbose_name = "Блюдо"
         verbose_name_plural = "Блюда"
+
+
+class Comment(models.Model):
+    id_dish = models.ForeignKey(
+        RestaurantDish,
+        verbose_name="Блюдо",
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+    id_user = models.ForeignKey(
+        User,
+        verbose_name="Пользователь",
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+    title = models.CharField(verbose_name="Название", max_length=80)
+    text = models.TextField(verbose_name="Комментарий")
+    file = models.FileField(
+        verbose_name="Файл", upload_to="comments/", blank=True, null=True
+    )
 
 
 class Order(models.Model):

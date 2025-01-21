@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load tags %}
+
+{% block title %}
+    Доставка | Поиск
+{% endblock %}
+
+{% block content %}
+<h2 class="border-bottom pb-3">Найденные блюда</h2>
+<div class="row text-center">
+    {% for dish in dishes %}
+        <div class="col-3 p-2">
+            <div class="border border-2">
+                <a href="../dish/{{ dish.id }}/" class="text-decoration-none text-black">
+                        <img src="{% if dish.pic %}{{ dish.pic.url }}{% else %}media/no_photo.jpg{% endif %}" alt="Фото {{ dish.title }}" height="180">
+                        <p>Ресторан: {{ dish.id_group.id_restaurant.title }}</p>
+                        <h6>{{ dish.title }}</h6>
+                        <p>{{ dish.price }} ₽</p>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

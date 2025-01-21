@@ -52,11 +52,13 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path("api/", include(router.urls)),
     path("", views.index, name="index"),
     path("login/", views.user_login, name="login"),
+    path("logout/", views.user_logout, name="logout"),
     path("register/", views.user_register, name="register"),
     path("logout/", views.user_logout, name="logout"),
-    path("order/", views.user_order, name="order"),
+    path("search/", views.search, name="search"),
     path(
         "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
     ),
@@ -67,6 +69,8 @@ urlpatterns = [
     ),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("admin/", admin.site.urls),
-    path("api/", include(router.urls)),
     path("__debug__/", include("debug_toolbar.urls")),
+    path("dish/<slug:dish_id>/", views.index, name="dish_detail"),
+    path("<slug:restaurant_slug>/", views.index, name="restaurant_list"),
+    path("<slug:restaurant_slug>/<slug:group_slug>", views.index, name="group_list"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

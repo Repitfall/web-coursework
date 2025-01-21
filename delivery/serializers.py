@@ -15,13 +15,13 @@ from django.contrib.auth.models import User
 
 # ТРЕТИЙ СПОСОБ ВАЛИДАЦИИ
 def is_username_unique(value):
-    if User.objects.filter(login=value).exists():
+    if User.objects.filter(username=value).exists():
         raise serializers.ValidationError("Данный логин уже занят")
     return value
 
 
 class UserSerializer(serializers.ModelSerializer):
-    login = serializers.CharField(validators=[is_username_unique])
+    username = serializers.CharField(validators=[is_username_unique])
 
     class Meta:
         model = User

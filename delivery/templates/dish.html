@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load tags %}
+
+{% block title %}
+    Доставка | {{ dish.title }}
+{% endblock %}
+
+{% block content %}
+<div class="row border-bottom mb-3">
+    <div class="col-4 text-center">
+        <img src="{% if dish.pic %}{{ dish.pic.url }}{% else %}media/no_photo.jpg{% endif %}" alt="Фото {{ dish.title }}" height="300">
+    </div>
+    <div class="col-8">
+        <h2>{{ dish.title }}</h2>
+        <h3>{{ dish.price }} ₽</h3>
+        <p class="py-1">{{ dish.info }}</p>
+    </div>
+</div>
+{% if request.user.is_authenticated %}
+    {{ form.as_p }}
+    {% csrf_token %}
+{% else %}
+    <h3>Чтобы комментировать, войдите в аккаунт</h3>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load tags %}
+
+{% block title %}
+    Доставка | {{ restaurant.title }}
+{% endblock %}
+
+{% block content %}
+<h2>{{ restaurant.title }}</h2>
+<p class="border-bottom pt-3 pb-4">{{ restaurant.info }}</p>
+<div class="row">
+    <div class="col-3">
+        <h4 class="m-2">Меню</h4>
+        <div class="m-2 my-4">
+            <a class="text-decoration-none text-black" href="/{{ restaurant.slug }}">Все блюда</a>
+        </div>
+        {% for group in groups %}
+        <div class="m-2 my-4">
+            <a class="text-decoration-none text-black" href="{{ group.slug }}">{{ group.title }}</a>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="col-9 row text-center">
+        {% for dish in dishes %}
+        <div class="col-3 p-2">
+            <div class="border border-2">
+                <a href="../dish/{{ dish.id }}/" class="text-decoration-none text-black">
+                        <img src="{% if dish.pic %}{{ dish.pic.url }}{% else %}media/no_photo.jpg{% endif %}" alt="Фото {{ dish.title }}" height="180">
+                    <h6>{{ dish.title }}</h6>
+                    <p>{{ dish.price }} ₽</p>
+                </a>
+            </div>
+        </div>
+            
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

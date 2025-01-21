@@ -10,18 +10,18 @@
       <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
         Доставки из ресторанов
       </a>
-  
-      {% if request.user.is_authenticated %}
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="#" class="nav-link px-2 link-dark">Главная</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">История заказов</a></li>
-      </ul>
-      {% endif %}
       
+      <form class="d-flex" method="get" action="{% url 'search' %}">
+        <div class="form-floating">
+          <input type="text" name="search" class="form-control" id="search" placeholder="Найти блюдо" aria-label="Найти блюдо">
+          <label for="search">Найти блюдо</label>
+        </div>
+        <button class="btn btn-primary" type="submit">Искать</button>
+      </form>
+
       <div class="col-md-3 text-end">
       {% if request.user.is_authenticated %}
-        <a href="{% url 'order' %}"><button type="button" class="btn btn-primary">Корзина (0₽)</button></a>
-        <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-primary me-2">Выйти из аккаунта</button></a>
+        <a href="{% url 'logout' %}"><button type="button" class="btn btn-outline-primary me-2">Выйти из аккаунта</button></a>
       {% else %}
         <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-primary me-2">Войти</button></a>
         <a href="{% url 'register' %}"><button type="button" class="btn btn-primary">Зарегистирироваться</button></a>
