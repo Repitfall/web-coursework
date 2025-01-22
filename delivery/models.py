@@ -122,9 +122,14 @@ class Comment(models.Model):
     )
     title = models.CharField(verbose_name="Название", max_length=80)
     text = models.TextField(verbose_name="Комментарий")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     file = models.FileField(
         verbose_name="Файл", upload_to="comments/", blank=True, null=True
     )
+
+    def __str__(self):
+        return "Комментарий пользователя " + self.id_user + " к блюду " + self.id_dish
 
 
 class Order(models.Model):

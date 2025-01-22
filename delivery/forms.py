@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.forms import ModelForm, Textarea
+from .models import Comment
 
 
 class LoginForm(forms.Form):
@@ -21,10 +21,6 @@ class RegisterForm(forms.Form):
 
 
 class CommentForm(forms.Form):
-    title = forms.CharField()
-    text = forms.CharField(widget=forms.Textarea)
-    file = forms.FileField()
-
     class Meta:
-        model = User
-        fields = ["username", "first_name", "last_name"]
+        model = Comment
+        field = ["title", "text", "file"]

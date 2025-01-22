@@ -8,7 +8,7 @@
   <body>
     <header class="container d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
       <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-        Доставки из ресторанов
+        <img src="/media/static/logo.png" height="80">
       </a>
       
       <form class="d-flex" method="get" action="{% url 'search' %}">
@@ -16,7 +16,7 @@
           <input type="text" name="search" class="form-control" id="search" placeholder="Найти блюдо" aria-label="Найти блюдо">
           <label for="search">Найти блюдо</label>
         </div>
-        <button class="btn btn-primary" type="submit">Искать</button>
+        <button class="btn btn-primary m-2" type="submit">Искать</button>
       </form>
 
       <div class="col-md-3 text-end">
@@ -28,7 +28,7 @@
       {% endif %}
       </div>
     </header>
-    <main class="container">
+    <main class="container pb-5">
       {% block content %}
       {% endblock %}
     </main>

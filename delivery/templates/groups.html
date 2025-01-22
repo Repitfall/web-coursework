@@ -6,8 +6,17 @@
 {% endblock %}
 
 {% block content %}
-<h2>{{ restaurant.title }}</h2>
-<p class="border-bottom pt-3 pb-4">{{ restaurant.info }}</p>
+<a href="/"><button type="button" class="btn btn-outline-primary me-2">Вернуться к списку</button></a>
+<div class="row border-bottom my-3">
+    <div class="col-2 text-center">
+        <img class="my-4" src="{% if restaurant.logo %}{{ restaurant.logo.url }}{% else %}media/no_photo.jpg{% endif %}" alt="Фото {{ dish.title }}" height="160">
+    </div>
+    <div class="col-10">
+        <h2 class="pt-5">{{ restaurant.title }}</h2>
+        <p class="py-1">{{ restaurant.info }}</p>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-3">
         <h4 class="m-2">Меню</h4>
@@ -21,18 +30,21 @@
         {% endfor %}
     </div>
     <div class="col-9 row text-center">
-        {% for dish in dishes %}
-        <div class="col-3 p-2">
-            <div class="border border-2">
-                <a href="../dish/{{ dish.id }}/" class="text-decoration-none text-black">
-                        <img src="{% if dish.pic %}{{ dish.pic.url }}{% else %}media/no_photo.jpg{% endif %}" alt="Фото {{ dish.title }}" height="180">
-                    <h6>{{ dish.title }}</h6>
-                    <p>{{ dish.price }} ₽</p>
-                </a>
+        {% if dishes %}
+            {% for dish in dishes %}
+            <div class="col-3 p-2">
+                <div class="border border-2">
+                    <a href="../dish/{{ dish.id }}/" class="text-decoration-none text-black">
+                            <img src="{% if dish.pic %}{{ dish.pic.url }}{% else %}media/no_photo.jpg{% endif %}" alt="Фото {{ dish.title }}" height="150">
+                        <h6>{{ dish.title }}</h6>
+                        <p>{{ dish.price }} ₽</p>
+                    </a>
+                </div>
             </div>
-        </div>
-            
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <h4 class="pt-5 my-5">На данный момент здесь нет блюд</h4>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -6,7 +6,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="row border-bottom mb-3">
+<a href="/{{ dish.id_group.id_restaurant.slug }}"><button type="button" class="btn btn-outline-primary me-2">Вернуться к ресторану "{{ dish.id_group.id_restaurant.title }}"</button></a>
+<div class="row border-bottom my-3">
     <div class="col-4 text-center">
         <img src="{% if dish.pic %}{{ dish.pic.url }}{% else %}media/no_photo.jpg{% endif %}" alt="Фото {{ dish.title }}" height="300">
     </div>
@@ -20,6 +21,6 @@
     {{ form.as_p }}
     {% csrf_token %}
 {% else %}
-    <h3>Чтобы комментировать, войдите в аккаунт</h3>
+    <h3 class="py-2">Чтобы комментировать, войдите в аккаунт</h3>
 {% endif %}
 {% endblock %}

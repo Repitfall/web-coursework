@@ -6,16 +6,53 @@
 {% endblock %}
 
 {% block content %}
-    <h2>В нашей базе данных есть {% count_restaurants %} ресторанов</h2>
-    <h3>Самое дешёвое блюдо стоит всего {{ min_price_dish }} рублей!</h3>
-    <h4>Вы посетили эту страницу {{ num_visits }} раз</h4>
+    <div class="justify-content-center justify-content-md-between align-items-center d-flex flex-wrap pt-2 pb-1">
+        <h3 class="border-2">Рекомендованные блюда ({% count_recommended_dishes %})</h3>
+        <a href="{% url 'search' %}?filter=recommended"><button type="button" class="btn btn-outline-primary">Показать все блюда</button></a>
+    </div>
+    {% recommended_dishes as dishes %}
+    <div class="row text-center">
+    {% for dish in dishes %}
+    <div class="col-3 p-2">
+        <div class="border border-2">
+            <a href="/dish/{{ dish.id }}/" class="text-decoration-none text-black">
+                <img src="{{ dish.pic.url }}" alt="Фото {{ dish.title }}" height="150">
+                <p>Ресторан: {{ dish.id_group.id_restaurant.title }}</p>
+                <h6>{{ dish.title }}</h6>
+                <p>{{ dish.price }} ₽</p>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+    
+    <div class="justify-content-center justify-content-md-between align-items-center d-flex flex-wrap pt-5 pb-1">
+        <h3 class="border-2">Самые недорогие блюда (от {{ min_price_dish }} ₽)</h3>
+        <a href="{% url 'search' %}?filter=less_price"><button type="button" class="btn btn-outline-primary">Отсортировать все блюда</button></a>
+    </div>
+    {% min_price_dishes as dishes %}
+    <div class="row text-center">
+    {% for dish in dishes %}
+    <div class="col-3 p-2">
+        <div class="border border-2">
+            <a href="/dish/{{ dish.id }}/" class="text-decoration-none text-black">
+                <img src="{{ dish.pic.url }}" alt="Фото {{ dish.title }}" height="150">
+                <p>Ресторан: {{ dish.id_group.id_restaurant.title }}</p>
+                <h6>{{ dish.title }}</h6>
+                <p>{{ dish.price }} ₽</p>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+    <h3 class="border-2 pt-5">Все рестораны ({% count_restaurants %})</h3>
     <div class="row">
         {% for restaurant in restaurants %}
-            <div class="col-4">
-                <div class="text-center border border-2 m-3">
+            <div class="col-3 p-2">
+                <div class="text-center border border-2 py-1">
                     <a href="/{{ restaurant.slug }}" class="text-decoration-none text-black">
-                        <img class="m-2" src="{{ restaurant.logo.url }}" alt="Логотип {{ restaurant.title }}" height="300">
-                        <p>{{ restaurant.title }}</p>
+                        <img class="m-2" src="{{ restaurant.logo.url }}" alt="Логотип {{ restaurant.title }}" height="150">
+                        <h6>{{ restaurant.title }}</h6>
                     </a>
                 </div>
             </div>

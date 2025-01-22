@@ -202,17 +202,11 @@ def index(request, restaurant_slug=None, group_slug=None, dish_id=None):
 
         return render(request, "groups.html", context)
 
-    num_visits = request.session.get("num_visits", 0)
-    request.session["num_visits"] = num_visits + 1
-
-    dodo_exists = Restaurant.objects.filter(title="Додо Пицца").exists()
     min_price_dish = RestaurantDish.objects.aggregate(Min("price"))["price__min"]
     restaurants = Restaurant.objects.order_by("title")
     context = {
         "restaurants": restaurants,
         "min_price_dish": min_price_dish,
-        "dodo_exists": dodo_exists,
-        "num_visits": num_visits,
     }
     return render(request, "index.html", context)
 
@@ -230,7 +224,7 @@ def user_login(request):
             if not user.is_active:
                 return HttpResponse("Аккаунт заблокирован")
             dj_login(request, user)
-            request.session.set_expiry(300)
+            request.session.set_expiry(3600)
             return redirect("/")
     else:
         form = LoginForm()
@@ -255,15 +249,52 @@ def user_logout(request):
 
 
 def search(request):
-    searching = request.GET.get("search")
-    if searching:
-        dishes = (
-            RestaurantDish.objects.filter(title__icontains=searching)
-            .exclude(published=False)
-            .select_related("id_group")
-            .select_related("id_restaurant")
-        )
+    filter = request.GET.get("filter")
+    if filter:
+        if filter == "recommended":
+            dishes = list(RestaurantDish.objects.filter(
+                (
+                    Q(id_group__id_restaurant__title="Бургер Кинг")
+                    | Q(id_group__id_restaurant__title="Rostic's")
+                )
+                & ~Q(price__gte=300)
+                ))
+        elif filter == "less_price":
+            dishes = RestaurantDish.objects.order_by("price").exclude(published=False)
+        else:
+            dishes = RestaurantDish.objects.exclude(published=False) 
     else:
-        dishes = RestaurantDish.objects.all()
-    context = {"dishes": dishes}
+        searching = request.GET.get("search")
+        if searching:
+            dishes = (
+                RestaurantDish.objects.filter(title__icontains=searching)
+                .exclude(published=False)
+            )
+        else:
+            dishes = RestaurantDish.objects.exclude(published=False)
+    count = len(dishes)
+    context = {
+        "dishes": dishes,
+        "count": count
+        }
     return render(request, "search.html", context)
+
+
+@login_required
+def comment_add(request, id_dish):
+    dish = get_object_or_404(RestaurantDish, id=id_dish)
+    if request.method == "POST":
+        form = CommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.id_dish = dish
+            comment.id_user = request.id_user
+            comment.save()
+            return redirect('dish', id_dish=id_dish)
+    else:
+        form = CommentForm()
+    context = {
+        'form': form,
+        'dish': dish,
+    }
+    return render(request, 'comment_add.html', context)
