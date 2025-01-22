@@ -129,7 +129,11 @@ class Comment(models.Model):
     )
 
     def __str__(self):
-        return "Комментарий пользователя " + self.id_user + " к блюду " + self.id_dish
+        return "Комментарий пользователя " + str(self.id_user) + " к блюду " + str(self.id_dish)
+    
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
 
 
 class Order(models.Model):

@@ -13,9 +13,7 @@ from .models import (
     Restaurant,
     RestaurantGroup,
     RestaurantDish,
-    Order,
-    OrderDish,
-    Ticket,
+    Comment
 )
 
 
@@ -142,26 +140,8 @@ class RestaurantDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     generate_pdf.short_description = "Экспортировать в PDF"
 
 
-class OrderDishInline(admin.StackedInline):
-    model = OrderDish
-    raw_id_fields = ["id_dish"]
+@admin.register(Comment)
+class CommentAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    list_display = ["id", "title", "id_dish"]
+    raw_id_fields = ["id_user", "id_dish"]
 
-
-@admin.register(Order)
-class OrderAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    list_display = ["id", "id_user"]
-    search_fields = ["id_user"]
-    inlines = [OrderDishInline]
-
-
-@admin.register(OrderDish)
-class OrderDishAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    list_display = ["id", "id_order"]
-    search_fields = ["id_order"]
-
-
-@admin.register(Ticket)
-class TicketAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    list_display = ["id_order"]
-    search_fields = ["id_order"]
-    list_display_links = ["id_order"]

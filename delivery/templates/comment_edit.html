@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load tags %}
+
+{% block title %}
+    Доставка | Комментарий
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'dish' comment.id_dish.id %}" class="btn btn-outline-primary my-3">Отмена</a>
+<h3 class="pb-3">Изменение комментария:</h3>
+<div class="row">
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="title" class="form-label">Заголовок</label>
+            <input type="text" class="form-control" name="title" id="title" value="{{ comment.title }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Текст комментария</label>
+            <textarea name="text" class="form-control" id="text" rows="3" required>{{ comment.text }}</textarea>
+        </div>
+        {% if comment.file %}
+            <div class="mb-3">
+                <label for="file" class="form-label">Прикреплённый файл</label>
+                <input class="form-control" type="file" id="file" name="file">
+                <p>Текущий файл: <a href="{{ comment.file.url }}">{{ comment.file.name }}</a></p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="delete_file" id="delete_file">
+                    <label class="form-check-label" for="delete_file">Удалить файл?</label>
+                </div>
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary mt-5">Сохранить комментарий</button>
+        {% csrf_token %}
+    </form>
+{% endblock %}

@@ -22,6 +22,7 @@ from .models import (
     Order,
     OrderDish,
     Ticket,
+    Comment,
 )
 from .serializers import (
     UserSerializer,
@@ -166,11 +167,15 @@ class TicketViewSet(viewsets.ModelViewSet):
     search_fields = ["id"]
 
 
-def index(request, restaurant_slug=None, group_slug=None, dish_id=None):
+def index(request, restaurant_slug=None, group_slug=None, id_dish=None):
 
-    if dish_id:
-        dish = get_object_or_404(RestaurantDish, id=dish_id)
-        context = {"dish": dish}
+    if id_dish:
+        dish = get_object_or_404(RestaurantDish, id=id_dish)
+        comments = Comment.objects.filter(id_dish=id_dish)
+        context = {
+            "dish": dish,
+            "comments": comments,
+        }
         return render(request, "dish.html", context)
 
     if restaurant_slug:
@@ -202,7 +207,7 @@ def index(request, restaurant_slug=None, group_slug=None, dish_id=None):
 
         return render(request, "groups.html", context)
 
-    min_price_dish = RestaurantDish.objects.aggregate(Min("price"))["price__min"]
+    min_price_dish = RestaurantDish.objects.exclude(published=False).aggregate(Min("price"))["price__min"]
     restaurants = Restaurant.objects.order_by("title")
     context = {
         "restaurants": restaurants,
@@ -288,13 +293,45 @@ def comment_add(request, id_dish):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.id_dish = dish
-            comment.id_user = request.id_user
+            comment.id_user = request.user
             comment.save()
-            return redirect('dish', id_dish=id_dish)
+            return redirect("dish", id_dish=id_dish)
     else:
         form = CommentForm()
     context = {
         'form': form,
         'dish': dish,
     }
-    return render(request, 'comment_add.html', context)
+    return render(request, 'dish.html', context)
+
+@login_required
+def comment_edit(request, id_comment):
+    comment = get_object_or_404(Comment, id=id_comment)
+    if comment.id_user != request.user:
+        return redirect('dish', id_dish=comment.id_dish.id)
+    
+    if request.method == "POST":
+        form = CommentForm(request.POST, request.FILES, instance=comment)
+        delete_file = request.POST.get('delete_file')
+        if form.is_valid():
+            if delete_file:
+                comment.file.delete(save=False)
+                comment.file = None
+            form.save()
+            return redirect('dish', id_dish=comment.id_dish.id)
+    else:
+        form = CommentForm(instance=comment)
+    context = {
+        'form': form,
+        'comment': comment,
+    }
+    return render(request, 'comment_edit.html', context)
+
+@login_required
+def comment_delete(request, id_comment):
+    comment = get_object_or_404(Comment, id=id_comment)
+    if comment.id_user != request.user:
+        return redirect('dish', id_dish=comment.id_dish.id)
+    dish_id = comment.id_dish.id
+    comment.delete()
+    return redirect('dish', id_dish=dish_id)

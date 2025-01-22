@@ -20,7 +20,7 @@ class RegisterForm(forms.Form):
         return data["password"]
 
 
-class CommentForm(forms.Form):
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        field = ["title", "text", "file"]
+        fields = ["title", "text", "file"]

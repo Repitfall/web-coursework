@@ -70,7 +70,10 @@ urlpatterns = [
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
-    path("dish/<slug:dish_id>/", views.index, name="dish_detail"),
+    path("dish/<int:id_dish>/", views.index, name="dish"),
+    path('dish/<int:id_dish>/comment_add/', views.comment_add, name='comment_add'),
+    path('comment/<int:id_comment>/edit/', views.comment_edit, name='comment_edit'),
+    path('comment/<int:id_comment>/delete/', views.comment_delete, name='comment_delete'),
     path("<slug:restaurant_slug>/", views.index, name="restaurant_list"),
     path("<slug:restaurant_slug>/<slug:group_slug>", views.index, name="group_list"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
